@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SentinelAI — Multimodal Surveillance Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background effects -->
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+  <div class="noise"></div>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">SENTINEL<span class="logo-accent">AI</span></span>
+      </div>
+      <div class="status-pill online">
+        <span class="pulse-dot"></span> SYSTEM ONLINE
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="date" id="date">--</div>
+    </div>
+
+    <div class="header-right">
+      <div class="stat-chip">
+        <span class="stat-label">FEEDS</span>
+        <span class="stat-value" id="active-feeds">4</span>
+      </div>
+      <div class="stat-chip alert">
+        <span class="stat-label">ALERTS</span>
+        <span class="stat-value" id="alert-count">0</span>
+      </div>
+      <button class="btn-icon" id="settings-btn" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- ═══ MAIN LAYOUT ═══ -->
+  <main class="main-grid">
+
+    <!-- ─── LEFT: Video Feeds ─── -->
+    <section class="panel video-panel">
+      <div class="panel-header">
+        <span class="panel-title">▶ VIDEO FEEDS</span>
+        <div class="panel-controls">
+          <button class="ctrl-btn active" data-view="grid" title="Grid view">⊞</button>
+          <button class="ctrl-btn" data-view="single" title="Single view">▣</button>
+        </div>
+      </div>
+
+      <div class="video-grid" id="video-grid">
+
+        <!-- Camera 1 -->
+        <div class="feed-card" id="feed-0" data-cam="CAM-01">
+          <div class="feed-header">
+            <span class="cam-id">CAM-01</span>
+            <span class="cam-location">MAIN ENTRANCE</span>
+            <span class="feed-badge normal">NORMAL</span>
+          </div>
+          <div class="feed-viewport">
+            <canvas class="feed-canvas" id="canvas-0" width="320" height="200"></canvas>
+            <div class="feed-overlay">
+              <div class="detection-box" id="dbox-0" style="display:none;"></div>
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+            <div class="feed-hud">
+              <span class="hud-res">1080p</span>
+              <span class="hud-fps" id="fps-0">30 FPS</span>
+            </div>
+          </div>
+          <div class="feed-footer">
+            <div class="confidence-bar">
+              <span class="conf-label">THREAT</span>
+              <div class="conf-track"><div class="conf-fill" id="conf-0" style="width:5%"></div></div>
+              <span class="conf-val" id="confval-0">5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera 2 -->
+        <div class="feed-card" id="feed-1" data-cam="CAM-02">
+          <div class="feed-header">
+            <span class="cam-id">CAM-02</span>
+            <span class="cam-location">PARKING LOT</span>
+            <span class="feed-badge normal">NORMAL</span>
+          </div>
+          <div class="feed-viewport">
+            <canvas class="feed-canvas" id="canvas-1" width="320" height="200"></canvas>
+            <div class="feed-overlay">
+              <div class="detection-box" id="dbox-1" style="display:none;"></div>
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+            <div class="feed-hud">
+              <span class="hud-res">720p</span>
+              <span class="hud-fps" id="fps-1">25 FPS</span>
+            </div>
+          </div>
+          <div class="feed-footer">
+            <div class="confidence-bar">
+              <span class="conf-label">THREAT</span>
+              <div class="conf-track"><div class="conf-fill" id="conf-1" style="width:8%"></div></div>
+              <span class="conf-val" id="confval-1">8%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera 3 -->
+        <div class="feed-card" id="feed-2" data-cam="CAM-03">
+          <div class="feed-header">
+            <span class="cam-id">CAM-03</span>
+            <span class="cam-location">SERVER ROOM</span>
+            <span class="feed-badge normal">NORMAL</span>
+          </div>
+          <div class="feed-viewport">
+            <canvas class="feed-canvas" id="canvas-2" width="320" height="200"></canvas>
+            <div class="feed-overlay">
+              <div class="detection-box" id="dbox-2" style="display:none;"></div>
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+            <div class="feed-hud">
+              <span class="hud-res">1080p</span>
+              <span class="hud-fps" id="fps-2">30 FPS</span>
+            </div>
+          </div>
+          <div class="feed-footer">
+            <div class="confidence-bar">
+              <span class="conf-label">THREAT</span>
+              <div class="conf-track"><div class="conf-fill" id="conf-2" style="width:3%"></div></div>
+              <span class="conf-val" id="confval-2">3%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera 4 -->
+        <div class="feed-card" id="feed-3" data-cam="CAM-04">
+          <div class="feed-header">
+            <span class="cam-id">CAM-04</span>
+            <span class="cam-location">CORRIDOR B</span>
+            <span class="feed-badge normal">NORMAL</span>
+          </div>
+          <div class="feed-viewport">
+            <canvas class="feed-canvas" id="canvas-3" width="320" height="200"></canvas>
+            <div class="feed-overlay">
+              <div class="detection-box" id="dbox-3" style="display:none;"></div>
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+            <div class="feed-hud">
+              <span class="hud-res">4K</span>
+              <span class="hud-fps" id="fps-3">24 FPS</span>
+            </div>
+          </div>
+          <div class="feed-footer">
+            <div class="confidence-bar">
+              <span class="conf-label">THREAT</span>
+              <div class="conf-track"><div class="conf-fill" id="conf-3" style="width:10%"></div></div>
+              <span class="conf-val" id="confval-3">10%</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.video-grid -->
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <div class="upload-title">Upload for Analysis</div>
+        <div class="upload-row">
+          <label class="upload-btn" for="video-upload">
+            <span class="upload-icon">▶</span> Upload Video
+            <input type="file" id="video-upload" accept="video/*" hidden />
+          </label>
+          <label class="upload-btn audio" for="audio-upload">
+            <span class="upload-icon">♪</span> Upload Audio
+            <input type="file" id="audio-upload" accept="audio/*" hidden />
+          </label>
+          <button class="analyze-btn" id="analyze-btn" disabled>⚡ ANALYZE</button>
+        </div>
+        <div class="upload-status" id="upload-status">No files selected</div>
+        <div class="preview-area" id="preview-area" style="display:none;">
+          <video id="video-preview" controls></video>
+          <audio id="audio-preview" controls></audio>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CENTER: Audio Analysis ─── -->
+    <section class="panel audio-panel">
+      <div class="panel-header">
+        <span class="panel-title">♪ AUDIO ANALYSIS</span>
+        <div class="audio-status" id="audio-status-label">MONITORING</div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="waveform-container">
+        <canvas id="waveform-canvas" width="400" height="120"></canvas>
+        <div class="waveform-labels">
+          <span>AMPLITUDE</span><span>TIME →</span>
+        </div>
+      </div>
+
+      <!-- Spectrogram -->
+      <div class="spectrogram-container">
+        <div class="spec-title">SPECTROGRAM</div>
+        <canvas id="spectrogram-canvas" width="400" height="100"></canvas>
+      </div>
+
+      <!-- Audio Classes -->
+      <div class="audio-classes">
+        <div class="class-title">Audio Class Detection</div>
+        <div class="class-grid" id="class-grid">
+          <div class="class-item" data-class="ambient">
+            <span class="class-icon">🌿</span>
+            <span class="class-name">AMBIENT</span>
+            <div class="class-bar"><div class="class-fill" style="width:85%"></div></div>
+            <span class="class-pct">85%</span>
+          </div>
+          <div class="class-item" data-class="talking">
+            <span class="class-icon">💬</span>
+            <span class="class-name">TALKING</span>
+            <div class="class-bar"><div class="class-fill" style="width:12%"></div></div>
+            <span class="class-pct">12%</span>
+          </div>
+          <div class="class-item" data-class="screaming">
+            <span class="class-icon">⚠</span>
+            <span class="class-name">SCREAMING</span>
+            <div class="class-bar"><div class="class-fill anomaly" style="width:2%"></div></div>
+            <span class="class-pct">2%</span>
+          </div>
+          <div class="class-item" data-class="gunshot">
+            <span class="class-icon">🔴</span>
+            <span class="class-name">GUNSHOT</span>
+            <div class="class-bar"><div class="class-fill anomaly" style="width:1%"></div></div>
+            <span class="class-pct">1%</span>
+          </div>
+          <div class="class-item" data-class="explosion">
+            <span class="class-icon">💥</span>
+            <span class="class-name">EXPLOSION</span>
+            <div class="class-bar"><div class="class-fill anomaly" style="width:0%"></div></div>
+            <span class="class-pct">0%</span>
+          </div>
+          <div class="class-item" data-class="glass">
+            <span class="class-icon">🪟</span>
+            <span class="class-name">GLASS BREAK</span>
+            <div class="class-bar"><div class="class-fill anomaly" style="width:0%"></div></div>
+            <span class="class-pct">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Meter -->
+      <div class="audio-meter-section">
+        <div class="meter-title">Live Audio Level</div>
+        <div class="meter-bars" id="meter-bars">
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div><div class="meter-bar"></div>
+          <div class="meter-bar"></div><div class="meter-bar"></div>
+        </div>
+        <div class="mic-btn-row">
+          <button class="mic-btn" id="mic-btn">🎤 START MIC INPUT</button>
+        </div>
+      </div>
+
+      <!-- Fusion Score -->
+      <div class="fusion-section">
+        <div class="fusion-title">⬡ MULTIMODAL FUSION SCORE</div>
+        <div class="fusion-gauge-wrap">
+          <canvas id="gauge-canvas" width="200" height="120"></canvas>
+          <div class="gauge-label" id="gauge-label">SAFE</div>
+          <div class="gauge-val" id="gauge-val">12%</div>
+        </div>
+        <div class="fusion-meta">
+          <span>Audio: <b id="audio-weight">45%</b></span>
+          <span>Video: <b id="video-weight">55%</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── RIGHT: Alerts & Events ─── -->
+    <section class="panel alerts-panel">
+      <div class="panel-header">
+        <span class="panel-title">⚡ ALERTS &amp; EVENTS</span>
+        <button class="clear-btn" id="clear-alerts">CLEAR</button>
+      </div>
+
+      <!-- Threat Level -->
+      <div class="threat-section">
+        <div class="threat-label">Current Threat Level</div>
+        <div class="threat-display" id="threat-display">
+          <div class="threat-ring" id="threat-ring">
+            <div class="threat-level-text" id="threat-text">LOW</div>
+          </div>
+        </div>
+        <div class="threat-scale">
+          <span class="ts-item low active">LOW</span>
+          <span class="ts-item medium">MED</span>
+          <span class="ts-item high">HIGH</span>
+          <span class="ts-item critical">CRIT</span>
+        </div>
+      </div>
+
+      <!-- Alert Log -->
+      <div class="alert-log-wrap">
+        <div class="alert-log-title">Event Log</div>
+        <div class="alert-log" id="alert-log">
+          <div class="log-empty">No events detected</div>
+        </div>
+      </div>
+
+      <!-- Video Detection Classes -->
+      <div class="video-classes">
+        <div class="vc-title">Video Detection Classes</div>
+        <div class="vc-grid" id="vc-grid">
+          <div class="vc-item normal-bg">
+            <div class="vc-name">NORMAL WALK</div>
+            <div class="vc-bar"><div class="vc-fill" id="vc-normal" style="width:78%"></div></div>
+            <div class="vc-pct">78%</div>
+          </div>
+          <div class="vc-item">
+            <div class="vc-name">RUNNING</div>
+            <div class="vc-bar"><div class="vc-fill" id="vc-running" style="width:8%"></div></div>
+            <div class="vc-pct">8%</div>
+          </div>
+          <div class="vc-item">
+            <div class="vc-name">FIGHTING</div>
+            <div class="vc-bar"><div class="vc-fill anomaly-fill" id="vc-fighting" style="width:5%"></div></div>
+            <div class="vc-pct">5%</div>
+          </div>
+          <div class="vc-item">
+            <div class="vc-name">LOITERING</div>
+            <div class="vc-bar"><div class="vc-fill warning-fill" id="vc-loitering" style="width:9%"></div></div>
+            <div class="vc-pct">9%</div>
+          </div>
+          <div class="vc-item">
+            <div class="vc-name">VANDALISM</div>
+            <div class="vc-bar"><div class="vc-fill anomaly-fill" id="vc-vandalism" style="width:0%"></div></div>
+            <div class="vc-pct">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box-val" id="total-detections">0</div>
+          <div class="stat-box-label">DETECTIONS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="anomaly-count">0</div>
+          <div class="stat-box-label">ANOMALIES</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="uptime-val">00:00</div>
+          <div class="stat-box-label">UPTIME</div>
+        </div>
+      </div>
+
+      <!-- Simulate button -->
+      <button class="simulate-btn" id="simulate-btn">⚡ SIMULATE ANOMALY EVENT</button>
+    </section>
+
+  </main>
+
+  <!-- ═══ ALERT MODAL ═══ -->
+  <div class="alert-modal" id="alert-modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-icon">⚠</div>
+      <div class="modal-title" id="modal-title">ANOMALY DETECTED</div>
+      <div class="modal-body" id="modal-body">Suspicious activity identified</div>
+      <div class="modal-meta">
+        <span>Camera: <b id="modal-cam">--</b></span>
+        <span>Confidence: <b id="modal-conf">--</b></span>
+        <span>Time: <b id="modal-time">--</b></span>
+      </div>
+      <button class="modal-close" id="modal-close">ACKNOWLEDGE</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
